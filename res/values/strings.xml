@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">RokonPong</string>
+    <string name="presstocontinue">press screen to continue</string>
+</resources>
