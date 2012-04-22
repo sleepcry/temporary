@@ -8,13 +8,14 @@ import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.ormgas.rokonpong.statemachine.CharacterState;
+import com.ormgas.rokonpong.statemachine.PlayerActionInterface;
 import com.ormgas.rokonpong.statemachine.StateMachine;
 import com.ormgas.rokonpong.status.CharacterAttributes;
 import com.ormgas.rokonpong.status.PlayerStatus;
 import com.stickycoding.rokon.GameObject;
 import com.stickycoding.rokon.PhysicalSprite;
 
-public class GamePlayer extends PhysicalSprite {
+public class GamePlayer extends PhysicalSprite implements PlayerActionInterface{
 	public static final int LEFT_BEGIN = 36;
 	public static final int UP_BEGIN = 0;
 	public static final int DOWN_BEGIN = 24;
@@ -34,6 +35,7 @@ public class GamePlayer extends PhysicalSprite {
 	// charactor status
 	PlayerStatus status;
 	GameObject target;
+	GameObject anotherTarget;
 	List<StatusMoniter> moniter;
 	StateMachine sm;
 
@@ -191,9 +193,14 @@ public class GamePlayer extends PhysicalSprite {
 				* PlayerStatus.VELOCITY_FACTOER * getAttackFactor(attacker);
 		if (status.currentLife <= 0) {
 			status.currentLife = 0;
+			Log.d("removed",""+this);
+			PlayerManager.removePlayer(this);
 			remove();
 		}else if(attacker != target) {
 			status.status |= PlayerStatus.MASK_ATTACKED;
+			anotherTarget = attacker;
+		}else {
+			target = attacker;
 		}
 	}
 
@@ -238,5 +245,56 @@ public class GamePlayer extends PhysicalSprite {
 
 	public void setTarget(GameObject target) {
 		this.target = target;		
+	}
+
+	@Override
+	public boolean seek() {
+		List<GamePlayer> lst = PlayerManager.seekPlayer(body.getPosition(), 3);
+		if (lst != null && lst.size() > 0) {
+			GamePlayer followingTarget = null;
+			float dst = 1000.0f;
+			for (int i = 0; i < lst.size(); i++) {
+				GamePlayer p = lst.get(i);
+				if (p == this)
+					continue;
+				float anotherDst = p.getBody().getPosition()
+						.dst(getBody().getPosition());
+				if (anotherDst < dst) {
+					followingTarget = p;
+					dst = anotherDst;
+				}
+			}
+			if(followingTarget != null) {
+				setTarget(followingTarget);
+				return true;
+			}else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean escape() {
+		return false;		
+	}
+
+	@Override
+	public boolean fight() {
+		return false;
+	}
+
+	@Override
+	public boolean freewalk() {
+		return false;		
+	}
+
+	public void changeTarget() {
+		if(anotherTarget != null) {
+			GameObject temp = target;
+			target = anotherTarget;
+			anotherTarget = temp;
+		}
 	}
 }

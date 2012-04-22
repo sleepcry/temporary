@@ -13,30 +13,52 @@ public class StateAttack extends State {
 		super(character,sm);
 	}
 
-	@Override
-	public void onUpdate() {
-		GameObject target = character.getTarget();
-		if (!target.isAlive()) {
-			changeState(CharacterState.REST);
-		} else if (target != null && target instanceof GamePlayer) {
-			GamePlayer player = (GamePlayer)target;
-			Vector2 targetPos = new Vector2(target.x, target.y);
-			if (targetPos.dst(character.getBody().getPosition()) <= character.getStatus().attackRange) {
-				player.attacked(character);
-			} else {
-				changeState(CharacterState.REST);
-				character.setTarget(null);
-			}
-			if(Judgement.nonsense() && Judgement.shouldEscape(character)) {
-				changeState(CharacterState.MOVEAWAY);
-			}
-		}
-		Log.d("sm", "ATTACK");
+
+	private boolean shouldStop() {
+		return !Judgement.shouldFight(player);
+	}
+
+	private boolean shouldChangeTarget() {
+		return true;
 	}
 
 	@Override
 	public void changeState(CharacterState newState) {
 		sm.changeTo(newState);
+	}
+
+	@Override
+	protected void action() {
+		GameObject targetObj = player.getTarget();
+		if (targetObj != null && targetObj.isAlive() && targetObj instanceof GamePlayer) {
+			GamePlayer targetplayer = (GamePlayer)targetObj;
+			if (targetplayer.body.getPosition().dst(player.getBody().getPosition()) <= player.getStatus().attackRange) {
+				targetplayer.attacked(player);
+			}
+		}		
+	}
+
+	@Override
+	protected void update() {
+		if (attacked()) {
+			if(Judgement.shouldEscape(player)) {
+				changeState(CharacterState.ESCAPE);
+			}else if (shouldChangeTarget()) {
+				player.changeTarget();
+			}
+		}else if(shouldStop()) {
+			changeState(CharacterState.ESCAPE);
+		}else {
+			GameObject targetObj = player.getTarget();
+			if (targetObj instanceof GamePlayer) {
+				GamePlayer targetplayer = (GamePlayer)targetObj;
+				if (targetplayer.body.getPosition().dst(player.getBody().getPosition()) > player.getStatus().attackRange) {
+					changeState(CharacterState.FOLLOW);
+				}
+			}	
+		}
+		
+		Log.d("sm", "ATTACK");		
 	}
 
 }

@@ -24,4 +24,7 @@ public class PlayerManager {
 		}
 		return lst;
 	}
+	public static void removePlayer(GamePlayer player) {
+		lstChar.remove(player);
+	}
 }

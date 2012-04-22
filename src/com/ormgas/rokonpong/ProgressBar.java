@@ -17,6 +17,12 @@ public abstract class ProgressBar extends GameObject implements StatusMoniter{
 	}
 	public void setVal(float currentVal) {
 		this.currentVal = currentVal;
+		if(currentVal >= maxValue) {
+			currentVal = maxValue;
+		}
+		if(currentVal < 0) {
+			currentVal = 0;
+		}
 	}
 	public void setMaxValue(float maxValue) {
 		this.maxValue = maxValue;
@@ -25,22 +31,9 @@ public abstract class ProgressBar extends GameObject implements StatusMoniter{
 		super.onUpdate();
 		float ratio = currentVal/maxValue;
 		float r,g,b;
-		if(ratio > 0.7f) {
-			//green
-			r = 0.0f;
-			g = 1.0f;
-			b = 0.0f;
-		}else if(ratio >0.3f) {
-			//yellow
-			r = 1.0f;
-			g = 0.7f;
-			b = 0.0f;
-		}else {
-			//red
-			r = 1.0f;
-			g = 0.0f;
-			b = 0.0f;		
-		}
+		r = 1-ratio;
+		g = ratio;
+		b = r*g;
 		setRGB(r,g,b);
 		this.setWidth(maxWidth*currentVal/maxValue);
 	}

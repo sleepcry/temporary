@@ -14,8 +14,8 @@ public class StateMachine implements Updateable{
 	protected StateMachine(GamePlayer character) {
 		stateMap.put(CharacterState.REST, new StateRest(character,this));
 		stateMap.put(CharacterState.ATTACK, new StateAttack(character,this));
-		stateMap.put(CharacterState.MOVEAWAY, new StateMoveAway(character,this));
-		stateMap.put(CharacterState.MOVECLOSE, new StateMoveClose(character,this));
+		stateMap.put(CharacterState.ESCAPE, new StateEscape(character,this));
+		stateMap.put(CharacterState.FOLLOW, new StateFollow(character,this));
 		stateMap.put(CharacterState.FREEMOVE, new StateFreeMove(character,this));
 		changeTo(CharacterState.REST);
 	}

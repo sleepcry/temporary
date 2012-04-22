@@ -43,8 +43,11 @@ public class PlayerStatus implements Updateable {
 	}
 	@Override
 	public void onUpdate() {
-		if(currentPower < characterAttr.maxPower) {
+		if(currentPower < maxPower) {
 			currentPower += powerRegenerate;
+			if(currentPower > maxPower) {
+				currentPower = maxPower;
+			}
 		}
 	}
 }
