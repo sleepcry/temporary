@@ -195,6 +195,7 @@ public class GamePlayer extends PhysicalSprite implements PlayerActionInterface{
 			status.currentLife = 0;
 			Log.d("removed",""+this);
 			PlayerManager.removePlayer(this);
+			updateStatus();
 			remove();
 		}else if(attacker != target) {
 			status.status |= PlayerStatus.MASK_ATTACKED;
@@ -296,5 +297,9 @@ public class GamePlayer extends PhysicalSprite implements PlayerActionInterface{
 			target = anotherTarget;
 			anotherTarget = temp;
 		}
+	}
+
+	public void clearAttack() {
+		status.status &= ~PlayerStatus.MASK_ATTACKED;		
 	}
 }

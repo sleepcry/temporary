@@ -40,7 +40,13 @@ public class StateAttack extends State {
 
 	@Override
 	protected void update() {
+		GameObject targetObj = player.getTarget();
+		if(targetObj == null || !targetObj.isAlive()) {
+			player.setTarget(null);
+			changeState(CharacterState.REST);			
+		}
 		if (attacked()) {
+			player.clearAttack();
 			if(Judgement.shouldEscape(player)) {
 				changeState(CharacterState.ESCAPE);
 			}else if (shouldChangeTarget()) {
@@ -49,7 +55,6 @@ public class StateAttack extends State {
 		}else if(shouldStop()) {
 			changeState(CharacterState.ESCAPE);
 		}else {
-			GameObject targetObj = player.getTarget();
 			if (targetObj instanceof GamePlayer) {
 				GamePlayer targetplayer = (GamePlayer)targetObj;
 				if (targetplayer.body.getPosition().dst(player.getBody().getPosition()) > player.getStatus().attackRange) {

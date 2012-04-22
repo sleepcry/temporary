@@ -54,8 +54,10 @@ public class StateEscape extends State {
 
 	@Override
 	protected void update() {
-		if (safe() || shouldStopEscape()) {
-			changeState(CharacterState.REST);
+		GameObject targetObj = player.getTarget();
+		if(targetObj == null || !targetObj.isAlive() || safe() || shouldStopEscape()) {
+			player.setTarget(null);
+			changeState(CharacterState.REST);			
 		}
 		Log.d("sm", "ESCAPE");	
 	}

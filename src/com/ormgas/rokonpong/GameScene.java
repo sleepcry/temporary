@@ -157,13 +157,13 @@ public class GameScene extends Scene implements OnAccelerometerChange {
 				* MainActivity.scaleFactorX * 2,
 				Textures.smallcloud.getHeight() * MainActivity.scaleFactorX * 2);
 		mSmallCloud.setTexture(Textures.smallcloud);
-		this.add(3, mSmallCloud);
+//		this.add(3, mSmallCloud);
 
 		mBigCloud = new Sprite(5.4f, 1.0f, Textures.bigcloud.getWidth()
 				* MainActivity.scaleFactorX * 2, Textures.bigcloud.getHeight()
 				* MainActivity.scaleFactorX * 2);
 		mBigCloud.setTexture(Textures.bigcloud);
-		this.add(3, mBigCloud);
+//		this.add(3, mBigCloud);
 		
 		//layer 4
 		float x=0.25f,y=0.1f,w=4.5f,h=0.5f,g=1f,d=0.25f;	

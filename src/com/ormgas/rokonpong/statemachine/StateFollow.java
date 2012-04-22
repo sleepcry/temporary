@@ -48,7 +48,7 @@ public class StateFollow extends State {
 	// }
 
 	private boolean shouldStop() {
-		return Judgement.shouldSeek(player);
+		return !Judgement.shouldSeek(player);
 	}
 
 	@Override
@@ -72,7 +72,13 @@ public class StateFollow extends State {
 
 	@Override
 	protected void update() {
-		if (attacked()) {
+		//check target state
+		GameObject targetObj = player.getTarget();
+		if(targetObj == null || !targetObj.isAlive()) {
+			player.setTarget(null);
+			changeState(CharacterState.REST);			
+		}else if (attacked()) {
+			player.clearAttack();
 			// interrupted by a attack
 			if (Judgement.shouldFight(player)) {
 				changeState(CharacterState.ATTACK);
@@ -83,15 +89,11 @@ public class StateFollow extends State {
 			if (Judgement.shouldFight(player)) {
 				changeState(CharacterState.ATTACK);
 			} else {
-				GameObject targetObj = player.getTarget();
-				if (targetObj != null && targetObj.isAlive()) {
-					changeState(CharacterState.REST);
-				} else {
-					changeState(CharacterState.ESCAPE);
-				}
+				changeState(CharacterState.ESCAPE);
 			}
 		} else if (shouldStop()) {
 			// stopped by self
+			player.setTarget(null);
 			changeState(CharacterState.REST);
 		}
 		Log.d("sm", "FOLLOW");	

@@ -23,10 +23,12 @@ public class StateRest extends State {
 	@Override
 	protected void update() {
 		if (attacked()) {
+			player.clearAttack();
 			//interrupted by a attack
 			if (Judgement.shouldFight(player)) {
 				changeState(CharacterState.ATTACK);
 			} else {
+				player.clearAttack();
 				changeState(CharacterState.ESCAPE);
 			}
 		}else if(Judgement.shouldFight(player)) {

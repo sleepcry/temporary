@@ -5,7 +5,7 @@ import com.stickycoding.rokon.Updateable;
 public class PlayerStatus implements Updateable {
 	public float accPower;
 	public float currentPower;
-	public float powerRegenerate = 0.1f;
+	public float powerRegenerate = 0.01f;
 	public float maxPower = 10.0f;
 	public float maxLife = 100;
 	public float currentLife = 100;
